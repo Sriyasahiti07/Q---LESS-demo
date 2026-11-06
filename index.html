@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Q-LESS</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{brand:{50:'#f0fdf4',100:'#dcfce7',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d'},cream:'#FDFBF7'}}}}
+</script>
+<style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background-color:#FDFBF7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.custom-scrollbar::-webkit-scrollbar{width:6px}.custom-scrollbar::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:4px}
+</style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-emerald-100 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+<div class="w-10 h-10 rounded-xl bg-brand-800 flex items-center justify-center text-white font-bold text-xl shadow">Q</div>
+<div><span class="text-2xl font-extrabold text-brand-900 tracking-tight">Q-LESS</span>
+<span class="hidden sm:inline-block text-xs font-semibold uppercase px-2 py-0.5 ml-2 bg-brand-100 text-brand-800 rounded-full">Pre-Order &amp; Skip Queues</span></div>
+</div>
+<div class="flex items-center space-x-4">
+<div id="navOrgBadge" class="hidden sm:flex items-center text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-full cursor-pointer" onclick="navigateTo('organizations')">
+<i data-lucide="building-2" class="w-3.5 h-3.5 mr-1.5"></i><span id="navOrgName">Select Campus</span></div>
+<button onclick="navigateTo('orders')" class="text-slate-600 hover:text-brand-800 p-2 rounded-lg transition" title="Order History"><i data-lucide="clock" class="w-5 h-5"></i></button>
+<button onclick="openCartModal()" class="bg-brand-800 text-white px-3.5 py-2 rounded-xl flex items-center space-x-2 hover:bg-brand-900 transition shadow-sm">
+<i data-lucide="shopping-bag" class="w-5 h-5"></i><span class="font-medium text-sm hidden sm:inline">Cart</span>
+<span id="cartCountBadge" class="bg-amber-400 text-slate-900 text-xs font-black rounded-full w-5 h-5 flex items-center justify-center">0</span></button>
+<div id="userProfileSection"><button onclick="navigateTo('login')" class="text-sm font-semibold text-brand-800 bg-brand-50 border border-brand-200 hover:bg-brand-100 px-3.5 py-2 rounded-xl transition">Login</button></div>
+</div>
+</div>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+<section id="view-home" class="space-y-12 py-4">
+<div class="text-center max-w-3xl mx-auto pt-6 pb-2">
+<span class="text-brand-800 text-sm font-bold tracking-wide uppercase bg-emerald-100/60 px-3 py-1 rounded-full border border-emerald-200">Smart Cafeteria Pre-Ordering</span>
+<h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 mt-4 tracking-tight leading-tight">Order in advance. <br class="hidden sm:inline"><span class="text-brand-800">Skip the queue.</span> Save your time.</h1>
+<p class="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">The unified food pre-ordering platform built specifically for high-capacity university campuses, corporate tech parks, and enterprise offices.</p>
+</div>
+<div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+<div onclick="selectCategory('edu')" class="group bg-white border-2 border-emerald-100 hover:border-brand-700 rounded-3xl p-8 cursor-pointer transition shadow-sm hover:shadow-xl flex flex-col justify-between">
+<div><div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-brand-800 group-hover:bg-brand-800 group-hover:text-white transition"><i data-lucide="graduation-cap" class="w-8 h-8"></i></div>
+<h3 class="text-2xl font-bold text-slate-900 mt-5">Educational Institutions</h3>
+<p class="text-slate-600 mt-2 text-sm leading-relaxed">Colleges, universities, and polytechnics. Avoid short break rush hours between lectures and lab sessions.</p></div>
+<div class="mt-8 flex items-center text-brand-800 font-bold text-sm">Explore Campuses <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></div>
+</div>
+<div onclick="selectCategory('corp')" class="group bg-white border-2 border-emerald-100 hover:border-brand-700 rounded-3xl p-8 cursor-pointer transition shadow-sm hover:shadow-xl flex flex-col justify-between">
+<div><div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-brand-800 group-hover:bg-brand-800 group-hover:text-white transition"><i data-lucide="building-2" class="w-8 h-8"></i></div>
+<h3 class="text-2xl font-bold text-slate-900 mt-5">Corporate Offices</h3>
+<p class="text-slate-600 mt-2 text-sm leading-relaxed">IT parks, business centers, and global workplace hubs. Schedule your lunch and coffee breaks effortlessly.</p></div>
+<div class="mt-8 flex items-center text-brand-800 font-bold text-sm">Explore Workplaces <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></div>
+</div>
+</div>
+<div class="border-t border-slate-200 pt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center max-w-4xl mx-auto">
+<div class="p-4"><div class="w-10 h-10 mx-auto bg-amber-100 text-amber-800 rounded-xl flex items-center justify-center mb-3"><i data-lucide="clock" class="w-5 h-5"></i></div><h4 class="font-bold text-slate-800">Guaranteed Slot Booking</h4><p class="text-xs text-slate-500 mt-1">Pick a 15-minute collection window matching your schedule.</p></div>
+<div class="p-4"><div class="w-10 h-10 mx-auto bg-emerald-100 text-brand-800 rounded-xl flex items-center justify-center mb-3"><i data-lucide="utensils" class="w-5 h-5"></i></div><h4 class="font-bold text-slate-800">Fresh &amp; Hot Pickup</h4><p class="text-xs text-slate-500 mt-1">Kitchen prepares food right in time for your pickup window.</p></div>
+<div class="p-4"><div class="w-10 h-10 mx-auto bg-emerald-100 text-brand-800 rounded-xl flex items-center justify-center mb-3"><i data-lucide="smartphone" class="w-5 h-5"></i></div><h4 class="font-bold text-slate-800">100% Contactless Tracking</h4><p class="text-xs text-slate-500 mt-1">Live order progress right from preparation to ready-to-collect.</p></div>
+</div>
+</section>
+
+<section id="view-organizations" class="hidden space-y-6">
+<div class="border-b border-slate-200 pb-4">
+<button onclick="navigateTo('home')" class="text-sm font-semibold text-slate-500 hover:text-brand-800 flex items-center mb-1"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i> Back to Categories</button>
+<h2 id="orgPageHeading" class="text-2xl font-extrabold text-slate-900">Select Your Organization</h2>
+</div>
+<div id="orgCardsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
+
+<section id="view-login" class="hidden max-w-md mx-auto py-8">
+<div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+<div class="text-center mb-6">
+<div class="w-12 h-12 rounded-2xl bg-brand-800 text-white font-extrabold text-2xl flex items-center justify-center mx-auto mb-3">Q</div>
+<h3 class="text-2xl font-bold text-slate-900">Login</h3>
+</div>
+<form onsubmit="handleDemoLogin(event)" class="space-y-4">
+<div><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Your Full Name</label>
+<input id="loginName" type="text" value="Rahul Sharma" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-700 text-sm bg-white text-slate-800"></div>
+<div><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Account Type</label>
+<select id="loginRole" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-700 text-sm bg-white text-slate-800">
+<option value="Student">Student (University / College)</option><option value="Employee">Corporate Employee</option><option value="Faculty">Campus Faculty / Staff</option></select></div>
+<button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-bold py-3 rounded-xl transition shadow">Enter Platform</button>
+</form>
+<p class="mt-6 pt-5 border-t border-slate-100 text-center text-xs text-slate-400">Demo orders are stored locally in your browser.</p>
+</div>
+</section>
+
+<section id="view-cafeterias" class="hidden space-y-6">
+<div class="border-b border-slate-200 pb-4">
+<button onclick="navigateTo('organizations')" class="text-sm font-semibold text-slate-500 hover:text-brand-800 flex items-center mb-1"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i> Change Organization</button>
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+<div><h2 id="currentOrgTitle" class="text-2xl font-extrabold text-slate-900">Available Cafeterias</h2><p id="currentOrgSubtitle" class="text-sm text-slate-500">Select a dining area to browse food menu</p></div>
+<div class="flex items-center text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg w-fit"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-ping"></span> Live Kitchens Open</div>
+</div>
+</div>
+<div id="cafeteriaCardsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
+
+<section id="view-menu" class="hidden space-y-6">
+<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<button onclick="navigateTo('cafeterias')" class="text-xs font-semibold text-brand-800 hover:underline flex items-center mb-1"><i data-lucide="chevron-left" class="w-3.5 h-3.5 mr-0.5"></i> Back to All Cafeterias</button>
+<h2 id="menuCafeteriaName" class="text-2xl font-black text-slate-900">Cafeteria Menu</h2>
+<p id="menuCafeteriaHours" class="text-xs text-slate-500 mt-0.5"></p>
+</div>
+<div class="flex flex-wrap gap-2" id="categoryFilterBar"></div>
+</div>
+</div>
+<div id="foodItemsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+</section>
+
+<section id="view-orders" class="hidden space-y-6">
+<div class="flex items-center justify-between border-b border-slate-200 pb-4">
+<div><h2 class="text-2xl font-extrabold text-slate-900">My Orders &amp; Tracking</h2><p class="text-xs text-slate-500">Track current preparation status and view past pickup tokens</p></div>
+<button onclick="navigateTo('cafeterias')" class="text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 px-3.5 py-2 rounded-xl">Order New Food</button>
+</div>
+<div id="orderListContainer" class="space-y-4"></div>
+</section>
+</main>
+
+<div id="cartModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm justify-end">
+<div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+<div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+<div class="flex items-center space-x-2"><i data-lucide="shopping-bag" class="w-5 h-5 text-brand-800"></i><h3 class="font-bold text-slate-900 text-lg">Your Food Tray</h3></div>
+<button onclick="closeCartModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
+</div>
+<div id="cartItemsList" class="flex-grow overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+<div class="border-t border-slate-200 p-5 bg-white space-y-4">
+<div>
+<label class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1 text-brand-800"></i> Select Pickup Slot</label>
+<div id="pickupSlotSelector" class="grid grid-cols-3 gap-2"></div>
+<p id="selectedSlotNotice" class="text-[11px] text-brand-800 font-semibold mt-1"></p>
+</div>
+<div class="bg-slate-50 p-3.5 rounded-xl space-y-1.5 text-xs text-slate-600 border border-slate-100">
+<div class="flex justify-between"><span>Item Subtotal</span><span id="billSubtotal" class="font-bold text-slate-800">₹0</span></div>
+<div class="flex justify-between"><span>Convenience &amp; Eco Packaging</span><span id="billPackaging" class="font-bold text-slate-800">₹5</span></div>
+<div class="flex justify-between border-t border-slate-200 pt-1.5 text-sm font-extrabold text-slate-900"><span>Grand Total</span><span id="billTotal" class="text-brand-800">₹0</span></div>
+</div>
+<button id="btnConfirmOrder" onclick="processCheckout()" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2"><span>Confirm &amp; Generate Token</span><i data-lucide="check-circle" class="w-4 h-4"></i></button>
+</div>
+</div>
+</div>
+
+<div id="successModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4">
+<div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+<div class="w-16 h-16 bg-emerald-100 text-brand-800 rounded-full flex items-center justify-center mx-auto"><i data-lucide="check" class="w-8 h-8"></i></div>
+<div><h4 class="text-xl font-black text-slate-900">Order Confirmed!</h4><p class="text-xs text-slate-500 mt-1">Show this token at the collection counter.</p></div>
+<div class="bg-cream border border-brand-200 rounded-2xl p-4">
+<span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Pickup Token / Order ID</span>
+<div id="modalOrderId" class="text-3xl font-black text-brand-900 tracking-wider my-1">QL-8921</div>
+<div id="modalSlotTime" class="text-xs font-semibold text-emerald-800 bg-emerald-100/70 px-2.5 py-1 rounded-full inline-block"></div>
+</div>
+<p class="text-[11px] text-slate-400">Simulated demonstration: No money was deducted.</p>
+<button onclick="closeSuccessModal()" class="w-full bg-brand-800 text-white font-bold py-2.5 rounded-xl hover:bg-brand-900 transition">Track Order Status</button>
+</div>
+</div>
+
+<footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+<div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="flex items-center space-x-2"><span class="font-extrabold text-brand-900">Q-LESS</span><span>• Multi-Campus Food Pre-Ordering Platform</span></div>
+<div class="text-slate-400">Demo Mode • Zero Queue Architecture</div>
+</div>
+</footer>
+
+<script>
+const ORGANIZATIONS=[
+{id:"edu-1",category:"edu",name:"IIT Delhi Campus",type:"Institute of Technology",location:"Hauz Khas, New Delhi",emoji:"🎓",grad:"from-emerald-200 to-teal-300",cafeterias:[
+{id:"c1",name:"Central Tech Cafeteria",hours:"08:00 AM - 09:30 PM",categories:["Breakfast","Lunch","Snacks"]},
+{id:"c2",name:"Nilgiri Mess & Juice Point",hours:"07:30 AM - 10:00 PM",categories:["Beverages","Snacks","Breakfast"]}]},
+{id:"edu-2",category:"edu",name:"St. Xavier's University Hub",type:"Autonomous University",location:"Park Street Campus",emoji:"🏛️",grad:"from-amber-200 to-orange-300",cafeterias:[
+{id:"c3",name:"The Xavier Food Court",hours:"08:30 AM - 06:00 PM",categories:["Lunch","Snacks","Beverages"]},
+{id:"c4",name:"Green Canopy Bakery",hours:"09:00 AM - 05:00 PM",categories:["Snacks","Beverages"]}]},
+{id:"corp-1",category:"corp",name:"CyberCity Tech Park (Tower B)",type:"Enterprise IT Campus",location:"Cyber Hub, Gurugram",emoji:"🏢",grad:"from-sky-200 to-indigo-300",cafeterias:[
+{id:"c5",name:"Nexus Multi-Cuisine Food Court",hours:"08:00 AM - 08:00 PM",categories:["Breakfast","Lunch","Snacks","Beverages"]},
+{id:"c6",name:"The Express Bean & Bites",hours:"07:00 AM - 11:00 PM",categories:["Snacks","Beverages"]}]},
+{id:"corp-2",category:"corp",name:"Mindspace Business Campus",type:"Corporate Tech Park",location:"Madhapur, Hyderabad",emoji:"🌆",grad:"from-violet-200 to-fuchsia-300",cafeterias:[
+{id:"c7",name:"Terrace Bistro & Meals",hours:"08:30 AM - 08:30 PM",categories:["Lunch","Breakfast"]},
+{id:"c8",name:"QuickFuel Chai Point",hours:"08:00 AM - 09:00 PM",categories:["Beverages","Snacks"]}]}
+];
+const FOOD_MENU=[
+{id:101,name:"Crispy Masala Dosa",category:"Breakfast",price:65,emoji:"🥞",desc:"Golden roasted crepe filled with spiced potato masala, served with coconut chutney & sambar."},
+{id:102,name:"Steamed Idli Vada Combo",category:"Breakfast",price:55,emoji:"🍘",desc:"2 pillowy soft idlis and 1 crispy medu vada with freshly ground chutney and piping hot sambar."},
+{id:103,name:"Indori Poha & Sev",category:"Breakfast",price:45,emoji:"🍚",desc:"Flattened rice tempered with mustard, fennel seeds, roasted peanuts, topped with ratlami sev."},
+{id:104,name:"Royal Paneer Butter Masala Thali",category:"Lunch",price:150,emoji:"🍛",desc:"Rich paneer gravy, yellow dal tadka, 2 whole wheat rotis, steamed jeera rice, salad & gulab jamun."},
+{id:105,name:"Hyderabadi Chicken Biryani",category:"Lunch",price:180,emoji:"🍗",desc:"Dum cooked aromatic basmati rice layered with tender marinated chicken pieces, served with raita."},
+{id:106,name:"Homestyle Dal Makhani Bowl",category:"Lunch",price:120,emoji:"🥣",desc:"Slow-cooked black lentils in churned butter with steamed basmati rice and roasted papad."},
+{id:107,name:"Delhi Samosa Chaat (2 pcs)",category:"Snacks",price:50,emoji:"🥟",desc:"Crushed potato samosas drizzled with warm chole gravy, sweetened curd, tamarind & mint chutney."},
+{id:108,name:"Grilled Veg Cheese Sandwich",category:"Snacks",price:75,emoji:"🥪",desc:"Triple layered buttered bread loaded with crunchy veggies, green herbs, and melted mozzarella."},
+{id:109,name:"Paneer Tikka Roll",category:"Snacks",price:90,emoji:"🌯",desc:"Clay-oven grilled paneer cubes wrapped in a flaky paratha with sliced pickled onions and mint mayo."},
+{id:110,name:"Kulhad Masala Chai",category:"Beverages",price:25,emoji:"🍵",desc:"Traditional slow-brewed tea infused with fresh ginger, cardamom and aromatic spices in an earthen cup."},
+{id:111,name:"Cold Coffee with Vanilla Scoop",category:"Beverages",price:70,emoji:"🧋",desc:"Thick hand-blended espresso shake topped with rich vanilla ice cream and cocoa dusting."},
+{id:112,name:"Fresh Mint Sweet Lime Juice",category:"Beverages",price:45,emoji:"🍹",desc:"Cold-pressed fresh sweet lime juice lightly touched with mint sprigs and black salt."}
+];
+const PICKUP_SLOTS=[{time:"12:15 PM",available:true},{time:"12:30 PM",available:true},{time:"12:45 PM",available:false},{time:"01:00 PM",available:true},{time:"01:15 PM",available:true},{time:"01:30 PM",available:true}];
+
+let currentCategory="edu",selectedOrg=null,selectedCafeteria=null,selectedSlot="12:30 PM",cart=[],activeFilter="all",memOrders=null;
+
+function getStoredOrders(){
+ if(memOrders)return memOrders;
+ try{const s=localStorage.getItem("qless_orders");if(s)return JSON.parse(s)}catch(e){}
+ return [{id:"QL-7201",orgName:"CyberCity Tech Park (Tower B)",cafeteriaName:"Nexus Multi-Cuisine Food Court",itemsSummary:"Hyderabadi Chicken Biryani x 1, Cold Coffee x 1",total:255,slot:"12:30 PM",status:"Ready for Pickup",placedAt:"Today, 12:05 PM"}];
+}
+function saveOrders(o){memOrders=o;try{localStorage.setItem("qless_orders",JSON.stringify(o))}catch(e){}}
+const icons=()=>{try{lucide.createIcons()}catch(e){}};
+
+function navigateTo(v){
+ ['home','organizations','login','cafeterias','menu','orders'].forEach(x=>document.getElementById('view-'+x).classList.add('hidden'));
+ document.getElementById('view-'+v).classList.remove('hidden');
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(v==='orders')renderOrdersList();
+ if(v==='cafeterias'&&selectedOrg)renderCafeterias();
+ icons();
+}
+
+function selectCategory(cat){
+ currentCategory=cat;
+ document.getElementById('orgPageHeading').innerText=cat==='edu'?"Educational Campuses & Universities":"Corporate Offices & IT Campuses";
+ document.getElementById('orgCardsGrid').innerHTML=ORGANIZATIONS.filter(o=>o.category===cat).map(o=>`
+ <div onclick="selectOrganization('${o.id}')" class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-brand-700 hover:shadow-lg transition cursor-pointer flex flex-col">
+  <div class="h-44 w-full relative bg-gradient-to-br ${o.grad} flex items-center justify-center text-6xl">${o.emoji}
+   <span class="absolute top-3 left-3 bg-white/90 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded-full shadow-sm">${o.type}</span></div>
+  <div class="p-5 flex-grow flex flex-col justify-between">
+   <div><h3 class="font-bold text-lg text-slate-900">${o.name}</h3>
+   <p class="text-xs text-slate-500 flex items-center mt-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>${o.location}</p></div>
+   <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs"><span class="font-semibold text-brand-800">${o.cafeterias.length} Cafeterias Open</span><span class="text-brand-800 font-bold flex items-center">Proceed <i data-lucide="chevron-right" class="w-3.5 h-3.5 ml-1"></i></span></div>
+  </div></div>`).join('');
+ navigateTo('organizations');
+}
+
+function selectOrganization(id){
+ selectedOrg=ORGANIZATIONS.find(o=>o.id===id);if(!selectedOrg)return;
+ document.getElementById('navOrgBadge').classList.remove('hidden');
+ document.getElementById('navOrgName').innerText=selectedOrg.name.length>20?selectedOrg.name.substring(0,18)+'...':selectedOrg.name;
+ renderCafeterias();navigateTo('cafeterias');
+}
+
+function renderCafeterias(){
+ if(!selectedOrg)return;
+ document.getElementById('currentOrgTitle').innerText=selectedOrg.name;
+ document.getElementById('currentOrgSubtitle').innerText=`Select one of the dining spaces at ${selectedOrg.location}`;
+ document.getElementById('cafeteriaCardsGrid').innerHTML=selectedOrg.cafeterias.map(c=>`
+ <div onclick="selectCafeteria('${c.id}')" class="bg-white border-2 border-slate-100 hover:border-brand-600 rounded-2xl p-6 transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between">
+  <div><div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-800 flex items-center justify-center mb-4"><i data-lucide="utensils-crossed" class="w-6 h-6"></i></div>
+  <h3 class="text-xl font-bold text-slate-900">${c.name}</h3>
+  <p class="text-xs text-slate-500 mt-1 flex items-center"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1 text-emerald-600"></i>${c.hours}</p>
+  <div class="mt-4 flex flex-wrap gap-1.5">${c.categories.map(x=>`<span class="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-md">${x}</span>`).join('')}</div></div>
+  <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Accepting Pre-orders</span><span class="text-sm font-bold text-brand-800 flex items-center">View Menu <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span></div>
+ </div>`).join('');
+}
+
+function selectCafeteria(id){
+ if(!selectedOrg)return;
+ selectedCafeteria=selectedOrg.cafeterias.find(c=>c.id===id);if(!selectedCafeteria)return;
+ document.getElementById('menuCafeteriaName').innerText=selectedCafeteria.name;
+ document.getElementById('menuCafeteriaHours').innerText=`Active Counters • Operating: ${selectedCafeteria.hours}`;
+ renderMenu('all');navigateTo('menu');
+}
+
+function renderFilters(){
+ document.getElementById('categoryFilterBar').innerHTML=['all','Breakfast','Lunch','Snacks','Beverages'].map(c=>
+ `<button onclick="renderMenu('${c}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${activeFilter===c?'bg-brand-800 text-white':'bg-slate-100 text-slate-700 hover:bg-slate-200'}">${c==='all'?'All Items':c}</button>`).join('');
+}
+
+function renderMenu(category){
+ if(category)activeFilter=category;
+ renderFilters();
+ const items=activeFilter==='all'?FOOD_MENU:FOOD_MENU.filter(i=>i.category===activeFilter);
+ document.getElementById('foodItemsGrid').innerHTML=items.map(f=>{
+  const ci=cart.find(c=>c.id===f.id),qty=ci?ci.qty:0;
+  return `<div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow transition">
+  <div class="relative h-36 w-full bg-gradient-to-br from-amber-50 to-emerald-100 flex items-center justify-center text-6xl">${f.emoji}
+   <span class="absolute top-2.5 right-2.5 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-white/90 text-slate-800 shadow">${f.category}</span></div>
+  <div class="p-4 flex-grow flex flex-col justify-between">
+   <div><div class="flex items-start justify-between gap-1"><h4 class="font-bold text-slate-900 text-base leading-snug">${f.name}</h4><span class="font-black text-brand-900 text-base whitespace-nowrap">₹${f.price}</span></div>
+   <p class="text-slate-500 text-xs mt-1.5 leading-relaxed">${f.desc}</p></div>
+   <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+    <span class="text-[11px] font-semibold text-emerald-600 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Available</span>
+    ${qty===0?`<button onclick="addToCart(${f.id})" class="bg-brand-800 hover:bg-brand-900 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center shadow-sm"><i data-lucide="plus" class="w-3.5 h-3.5 mr-1"></i> Add</button>`
+    :`<div class="flex items-center space-x-2 bg-emerald-50 border border-brand-200 rounded-xl px-2 py-1"><button onclick="updateQty(${f.id},-1)" class="w-6 h-6 rounded-md bg-white text-slate-700 font-black text-sm flex items-center justify-center hover:bg-slate-100">-</button><span class="text-xs font-bold text-brand-900 px-1">${qty}</span><button onclick="updateQty(${f.id},1)" class="w-6 h-6 rounded-md bg-white text-slate-700 font-black text-sm flex items-center justify-center hover:bg-slate-100">+</button></div>`}
+   </div></div></div>`;}).join('');
+ icons();
+}
+
+function addToCart(id){
+ const f=FOOD_MENU.find(x=>x.id===id);if(!f)return;
+ const e=cart.find(c=>c.id===id);
+ if(e)e.qty++;else cart.push({id:f.id,name:f.name,price:f.price,qty:1});
+ updateCartUI();renderMenu();
+}
+function updateQty(id,d){
+ const i=cart.findIndex(c=>c.id===id);
+ if(i!==-1){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1)}
+ updateCartUI();renderMenu();
+}
+
+function updateCartUI(){
+ document.getElementById('cartCountBadge').innerText=cart.reduce((s,i)=>s+i.qty,0);
+ const list=document.getElementById('cartItemsList'),btn=document.getElementById('btnConfirmOrder');
+ if(!cart.length){
+  list.innerHTML=`<div class="h-64 flex flex-col items-center justify-center text-center text-slate-400"><i data-lucide="shopping-bag" class="w-12 h-12 mb-2 text-slate-300"></i><p class="text-sm font-semibold text-slate-500">Your food tray is empty</p><p class="text-xs text-slate-400 mt-1">Browse the menu to add hot meals &amp; snacks.</p></div>`;
+  document.getElementById('billSubtotal').innerText='₹0';document.getElementById('billTotal').innerText='₹0';
+  btn.disabled=true;btn.classList.add('opacity-50','cursor-not-allowed');
+ }else{
+  list.innerHTML=cart.map(i=>`<div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50"><div><h5 class="text-sm font-bold text-slate-800">${i.name}</h5><div class="text-xs text-brand-800 font-semibold mt-0.5">₹${i.price} each</div></div>
+  <div class="flex items-center space-x-2"><button onclick="updateQty(${i.id},-1)" class="w-6 h-6 rounded-md bg-white border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center">-</button><span class="text-xs font-bold text-slate-800 w-4 text-center">${i.qty}</span><button onclick="updateQty(${i.id},1)" class="w-6 h-6 rounded-md bg-white border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center">+</button><span class="text-xs font-black text-slate-900 w-12 text-right">₹${i.price*i.qty}</span></div></div>`).join('');
+  const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('billSubtotal').innerText=`₹${sub}`;document.getElementById('billPackaging').innerText='₹5';document.getElementById('billTotal').innerText=`₹${sub+5}`;
+  btn.disabled=false;btn.classList.remove('opacity-50','cursor-not-allowed');
+ }
+ renderPickupSlots();icons();
+}
+
+function renderPickupSlots(){
+ document.getElementById('pickupSlotSelector').innerHTML=PICKUP_SLOTS.map(s=>{
+  if(!s.available)return `<div class="p-2 border border-slate-200 rounded-xl bg-slate-100 text-center text-slate-400 text-xs cursor-not-allowed"><div class="line-through font-semibold">${s.time}</div><span class="text-[9px] uppercase">Full</span></div>`;
+  const sel=selectedSlot===s.time;
+  return `<button onclick="chooseSlot('${s.time}')" class="p-2 border rounded-xl text-center text-xs transition ${sel?'border-brand-700 bg-brand-50 text-brand-900 font-extrabold ring-1 ring-brand-700':'border-slate-200 hover:border-brand-500 text-slate-700 font-medium'}"><div>${s.time}</div><span class="text-[9px] text-emerald-600 font-bold uppercase">Available</span></button>`;}).join('');
+ document.getElementById('selectedSlotNotice').innerText=`Pickup window scheduled for: ${selectedSlot}`;
+}
+function chooseSlot(t){selectedSlot=t;renderPickupSlots()}
+function openCartModal(){updateCartUI();const m=document.getElementById('cartModal');m.classList.remove('hidden');m.classList.add('flex')}
+function closeCartModal(){const m=document.getElementById('cartModal');m.classList.add('hidden');m.classList.remove('flex')}
+
+function processCheckout(){
+ if(!cart.length)return;
+ const id=`QL-${Math.floor(1000+Math.random()*9000)}`;
+ const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+5;
+ const o={id,orgName:selectedOrg?selectedOrg.name:"Tech Campus Delhi",cafeteriaName:selectedCafeteria?selectedCafeteria.name:"Main Central Cafeteria",itemsSummary:cart.map(i=>`${i.name} x ${i.qty}`).join(', '),total,slot:selectedSlot,status:"Order Placed",placedAt:"Just now"};
+ const orders=getStoredOrders();orders.unshift(o);saveOrders(orders);
+ document.getElementById('modalOrderId').innerText=id;
+ document.getElementById('modalSlotTime').innerText=`Pickup Slot: ${selectedSlot}`;
+ closeCartModal();
+ const sm=document.getElementById('successModal');sm.classList.remove('hidden');sm.classList.add('flex');
+ cart=[];updateCartUI();renderMenu();
+ setTimeout(()=>{
+  const l=getStoredOrders();
+  if(l.length&&l[0].id===id&&l[0].status==="Order Placed"){l[0].status="Preparing";saveOrders(l);if(!document.getElementById('view-orders').classList.contains('hidden'))renderOrdersList()}
+ },7000);
+}
+function closeSuccessModal(){const m=document.getElementById('successModal');m.classList.add('hidden');m.classList.remove('flex');navigateTo('orders')}
+
+function renderOrdersList(){
+ const c=document.getElementById('orderListContainer'),orders=getStoredOrders();
+ if(!orders.length){c.innerHTML=`<div class="bg-white p-12 text-center rounded-2xl border border-slate-200"><h4 class="font-bold text-slate-700">No Orders Placed Yet</h4><p class="text-xs text-slate-400 mt-1">Pre-order your meals from your organization cafeteria to skip lines.</p></div>`;return}
+ const stages=["Order Placed","Preparing","Ready for Pickup","Collected"];
+ c.innerHTML=orders.map(o=>{
+  const ci=stages.indexOf(o.status);
+  return `<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+   <div><div class="flex items-center space-x-2"><span class="text-lg font-black text-slate-900 tracking-wide">${o.id}</span><span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-brand-900">${o.slot}</span></div>
+   <div class="text-xs text-slate-500 mt-0.5">${o.cafeteriaName} • ${o.orgName}</div></div>
+   <div class="sm:text-right"><span class="text-base font-extrabold text-brand-900">₹${o.total}</span><div class="text-[11px] text-slate-400">${o.placedAt}</div></div></div>
+  <div class="text-xs text-slate-600 bg-cream p-3 rounded-xl border border-amber-100"><span class="font-bold text-slate-700">Items: </span>${o.itemsSummary}</div>
+  <div><div class="text-xs font-bold text-slate-700 mb-2 flex justify-between"><span>Current Status</span><span class="text-brand-800 font-extrabold uppercase">${o.status}</span></div>
+  <div class="grid grid-cols-4 gap-2 text-center">${stages.map((s,i)=>{const d=i<=ci;return `<div class="space-y-1"><div class="h-2 rounded-full ${d?'bg-brand-700':'bg-slate-200'}"></div><span class="text-[10px] font-bold ${d?'text-brand-900':'text-slate-400'}">${s}</span></div>`}).join('')}</div></div>
+  ${o.status==='Ready for Pickup'?`<div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded-xl text-xs font-semibold flex items-center justify-between gap-2"><span>Please head to Counter #2 for quick token pickup!</span><button onclick="advanceOrderStatus('${o.id}','Collected')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1 rounded-lg text-[11px] whitespace-nowrap">Mark Collected</button></div>`:''}
+  ${o.status==='Order Placed'?`<div class="flex justify-end"><button onclick="advanceOrderStatus('${o.id}','Preparing')" class="text-xs text-slate-500 hover:text-brand-800 underline">[Demo Test: Advance to 'Preparing']</button></div>`:''}
+  ${o.status==='Preparing'?`<div class="flex justify-end"><button onclick="advanceOrderStatus('${o.id}','Ready for Pickup')" class="text-xs text-emerald-700 hover:text-emerald-900 font-semibold underline">[Demo Test: Advance to 'Ready for Pickup']</button></div>`:''}
+  </div>`;}).join('');
+ icons();
+}
+function advanceOrderStatus(id,st){
+ const orders=getStoredOrders(),t=orders.find(o=>o.id===id);
+ if(t){t.status=st;saveOrders(orders);renderOrdersList()}
+}
+
+function handleDemoLogin(e){
+ e.preventDefault();
+ const name=document.getElementById('loginName').value.replace(/[<>&"]/g,''),role=document.getElementById('loginRole').value;
+ document.getElementById('userProfileSection').innerHTML=`<div class="flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl cursor-pointer" onclick="navigateTo('login')"><div class="w-6 h-6 rounded-full bg-brand-800 text-white text-[11px] font-bold flex items-center justify-center">${name.charAt(0)}</div><div class="text-left hidden sm:block"><div class="text-xs font-bold text-slate-800 leading-none">${name}</div><div class="text-[10px] text-slate-500 leading-none mt-0.5">${role}</div></div></div>`;
+ selectCategory('edu');
+}
+
+window.addEventListener('DOMContentLoaded',()=>{icons();updateCartUI()});
+</script>
+</body>
+</html>
